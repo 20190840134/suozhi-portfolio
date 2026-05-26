@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>索志 | AI训练师</title>
+  <style>
+    :root {
+      --bg: #0b0f12;
+      --panel: #11181d;
+      --panel-2: #162025;
+      --text: #edf4f2;
+      --muted: #9fb1ad;
+      --line: rgba(237, 244, 242, 0.14);
+      --cyan: #60f0d6;
+      --blue: #74a7ff;
+      --amber: #f3b35b;
+      --rose: #ff7d8f;
+      --green: #9ddf72;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+      --max: 1160px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 78px;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: var(--text);
+      position: relative;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(96, 240, 214, 0.14), transparent 28%),
+        radial-gradient(circle at 86% 6%, rgba(243, 179, 91, 0.12), transparent 24%),
+        linear-gradient(135deg, #0b0f12 0%, #111719 48%, #101319 100%);
+      letter-spacing: 0;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(96, 240, 214, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(96, 240, 214, 0.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 78%);
+      animation: gridMove 20s linear infinite;
+      z-index: -1;
+    }
+
+    .cursor-glow {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(96, 240, 214, 0.16), rgba(96, 240, 214, 0.05) 34%, transparent 68%);
+      mix-blend-mode: screen;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      transition: opacity 220ms ease;
+      z-index: 2;
+    }
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      z-index: 40;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .scroll-progress span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--amber));
+      box-shadow: 0 0 14px rgba(96, 240, 214, 0.72);
+    }
+
+    #bgCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(11, 15, 18, 0.76);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      width: min(var(--max), calc(100% - 36px));
+      min-height: 70px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(96, 240, 214, 0.46);
+      background: linear-gradient(145deg, rgba(96, 240, 214, 0.18), rgba(116, 167, 255, 0.08));
+      color: var(--cyan);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a,
+    .lang-toggle {
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 9px 12px;
+      color: var(--muted);
+      font-size: 13px;
+      background: transparent;
+      cursor: pointer;
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+      position: relative;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active,
+    .lang-toggle:hover {
+      color: var(--cyan);
+      border-color: rgba(96, 240, 214, 0.3);
+      background: rgba(96, 240, 214, 0.08);
+      text-shadow: 0 0 8px rgba(96, 240, 214, 0.72), 0 0 18px rgba(96, 240, 214, 0.28);
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 4px;
+      height: 1px;
+      transform: scaleX(0);
+      transform-origin: left;
+      background: var(--cyan);
+      box-shadow: 0 0 8px rgba(96, 240, 214, 0.8);
+      transition: transform 180ms ease;
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      transform: scaleX(1);
+    }
+
+    main {
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    section {
+      position: relative;
+      padding: 112px 0;
+      border-bottom: 1px solid var(--line);
+      background-image:
+        linear-gradient(90deg, rgba(5, 10, 13, 0.93) 0%, rgba(5, 10, 13, 0.78) 36%, rgba(5, 10, 13, 0.58) 100%),
+        linear-gradient(180deg, rgba(5, 10, 13, 0.7) 0%, rgba(5, 10, 13, 0.34) 42%, rgba(5, 10, 13, 0.85) 100%),
+        var(--section-bg, none);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      isolation: isolate;
+      transition: filter 600ms ease;
+    }
+
+    section::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 24%, rgba(96, 240, 214, 0.1), transparent 28%),
+        linear-gradient(90deg, rgba(11, 15, 18, 0.2), transparent 48%);
+      z-index: -1;
+    }
+
+    .section-inner {
+      position: relative;
+      z-index: 1;
+      width: min(var(--max), calc(100% - 36px));
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 780ms ease, transform 780ms cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+    }
+
+    section.is-visible .section-inner {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero {
+      --section-bg: url("assets/bg-home.png");
+      min-height: 100vh;
+      display: grid;
+      align-items: center;
+      padding-top: 132px;
+      background-position: center center;
+    }
+
+    #about {
+      --section-bg: url("assets/bg-about.png");
+      background-position: center center;
+    }
+
+    #projects {
+      --section-bg: url("assets/bg-projects.png");
+      background-position: center center;
+    }
+
+    #strengths {
+      --section-bg: url("assets/bg-strengths.png");
+      background-position: center center;
+    }
+
+    #hometown {
+      --section-bg: url("assets/bg-hometown.png");
+      background-position: center center;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+      gap: 48px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 24px;
+      color: var(--cyan);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 1px;
+      background: var(--cyan);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 18px;
+      font-size: clamp(48px, 8vw, 104px);
+      line-height: 0.94;
+      font-weight: 850;
+      color: transparent;
+      background: linear-gradient(90deg, var(--cyan), var(--blue));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-stroke: 1px rgba(96, 240, 214, 0.22);
+      text-shadow: 0 0 28px rgba(96, 240, 214, 0.18);
+    }
+
+    .subtitle {
+      width: fit-content;
+      max-width: 640px;
+      color: #cbd8d5;
+      font-size: clamp(20px, 2.4vw, 34px);
+      line-height: 1.28;
+      font-weight: 600;
+      border-right: 2px solid var(--cyan);
+      white-space: nowrap;
+      overflow: hidden;
+      animation: typing 3.4s steps(18, end), blink 0.75s step-end infinite;
+    }
+
+    .intro {
+      max-width: 680px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.9;
+    }
+
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 30px 0 36px;
+    }
+
+    .tag {
+      border: 1px solid rgba(237, 244, 242, 0.14);
+      border-radius: 999px;
+      padding: 9px 13px;
+      color: #dce8e5;
+      background: rgba(255, 255, 255, 0.045);
+      font-size: 13px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      border: 1px solid rgba(237, 244, 242, 0.16);
+      border-radius: 999px;
+      padding: 0 18px;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.055);
+      font-size: 14px;
+      font-weight: 700;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      border-color: rgba(96, 240, 214, 0.55);
+      background: rgba(96, 240, 214, 0.12);
+    }
+
+    .button.primary {
+      border-color: transparent;
+      color: #07100f;
+      background: linear-gradient(135deg, var(--cyan), #c4ff96);
+    }
+
+    .hero-visual {
+      min-height: 520px;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .lens {
+      position: absolute;
+      inset: 18px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(237, 244, 242, 0.15);
+      background:
+        radial-gradient(circle at 50% 42%, rgba(96, 240, 214, 0.22), transparent 26%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+      box-shadow: var(--shadow);
+    }
+
+    .lens::before,
+    .lens::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(96, 240, 214, 0.28);
+      border-radius: 50%;
+      animation: rotate 18s linear infinite;
+    }
+
+    .lens::before {
+      width: min(74%, 360px);
+      aspect-ratio: 1;
+      border-style: dashed;
+    }
+
+    .lens::after {
+      width: min(50%, 244px);
+      aspect-ratio: 1;
+      border-color: rgba(243, 179, 91, 0.3);
+      animation-duration: 26s;
+      animation-direction: reverse;
+    }
+
+    .focus-card {
+      position: relative;
+      z-index: 1;
+      width: min(72%, 310px);
+      padding: 24px;
+      border: 1px solid rgba(237, 244, 242, 0.18);
+      background: rgba(11, 15, 18, 0.72);
+      backdrop-filter: blur(18px);
+    }
+
+    .focus-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--cyan);
+      font-size: 34px;
+    }
+
+    .focus-card span {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .metrics {
+      position: absolute;
+      right: 0;
+      bottom: 28px;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      width: min(100%, 420px);
+      border: 1px solid rgba(237, 244, 242, 0.14);
+      background: rgba(17, 24, 29, 0.86);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
+
+    .metric {
+      padding: 18px;
+      border-right: 1px solid var(--line);
+    }
+
+    .metric:last-child {
+      border-right: 0;
+    }
+
+    .metric b {
+      display: block;
+      color: var(--text);
+      font-size: 24px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 0.5fr 1fr;
+      gap: 42px;
+      margin-bottom: 48px;
+      align-items: end;
+    }
+
+    .kicker {
+      color: var(--cyan);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin-bottom: 0;
+      font-size: clamp(34px, 4.8vw, 64px);
+      line-height: 1;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .about-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 32px;
+    }
+
+    .profile-panel,
+    .text-panel,
+    .project,
+    .strength,
+    .contact-panel {
+      position: relative;
+      border: 1px solid var(--line);
+      background: rgba(17, 24, 29, 0.72);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      transition: transform 260ms ease, border-color 260ms ease, background 260ms ease;
+      overflow: hidden;
+    }
+
+    .project::before,
+    .strength::before,
+    .contact-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(115deg, transparent 0%, transparent 36%, rgba(96, 240, 214, 0.28) 48%, transparent 60%, transparent 100%);
+      transform: translateX(-120%);
+      transition: transform 760ms ease;
+    }
+
+    .project:hover::before,
+    .strength:hover::before,
+    .contact-panel:hover::before {
+      transform: translateX(120%);
+    }
+
+    .profile-panel {
+      min-height: 520px;
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      background:
+        linear-gradient(160deg, rgba(96, 240, 214, 0.14), transparent 46%),
+        linear-gradient(340deg, rgba(255, 125, 143, 0.12), transparent 42%),
+        rgba(17, 24, 29, 0.72);
+    }
+
+    .portrait {
+      position: absolute;
+      inset: 86px 44px 40px;
+      border: 1px solid rgba(237, 244, 242, 0.15);
+      background: #0d1216;
+      overflow: hidden;
+    }
+
+    .portrait img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center 18%;
+    }
+
+    .profile-caption {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .text-panel {
+      padding: 34px;
+    }
+
+    .text-panel p {
+      color: #cbd8d5;
+      line-height: 2;
+    }
+
+    .flow-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .flow-list span {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+    }
+
+    .flow-list i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 20px rgba(96, 240, 214, 0.7);
+      flex: 0 0 auto;
+    }
+
+    .projects {
+      display: grid;
+      gap: 22px;
+    }
+
+    .project {
+      overflow: hidden;
+      border-left: 3px solid rgba(96, 240, 214, 0.68);
+    }
+
+    .project-body {
+      padding: 34px;
+    }
+
+    .project-index {
+      color: var(--amber);
+      font-weight: 800;
+    }
+
+    h3 {
+      margin: 10px 0 16px;
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1.12;
+    }
+
+    .project-body p,
+    .strength p,
+    .hometown-copy p {
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .detail-list li {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 14px;
+      color: #cbd8d5;
+      line-height: 1.7;
+    }
+
+    .detail-list b {
+      color: var(--cyan);
+      font-size: 13px;
+    }
+
+    .strengths-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .strength {
+      min-height: 280px;
+      padding: 28px;
+    }
+
+    .strength:hover {
+      transform: translateY(-4px);
+      border-color: rgba(96, 240, 214, 0.42);
+    }
+
+    .strength-number {
+      color: var(--cyan);
+      font-weight: 850;
+    }
+
+    .strength h3 {
+      font-size: 25px;
+    }
+
+    .hometown-layout {
+      display: grid;
+      grid-template-columns: 0.78fr 1.22fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .hometown-copy {
+      position: sticky;
+      top: 102px;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .photo {
+      position: relative;
+      min-height: 250px;
+      overflow: hidden;
+      border: 1px solid rgba(237, 244, 242, 0.15);
+      background: #11181d;
+      box-shadow: var(--shadow);
+    }
+
+    .photo::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(11, 15, 18, 0.48), transparent 58%);
+      z-index: 1;
+    }
+
+    .photo::after {
+      content: attr(data-title);
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 16px;
+      color: var(--text);
+      font-weight: 800;
+      text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+      z-index: 2;
+    }
+
+    .photo img {
+      width: 100%;
+      height: 100%;
+      min-height: 250px;
+      display: block;
+      object-fit: cover;
+      filter: saturate(1.05) contrast(1.02);
+      transition: transform 260ms ease;
+    }
+
+    .photo:hover img {
+      transform: scale(1.04);
+    }
+
+    .photo.one img {
+      object-position: center center;
+    }
+
+    .photo.two img {
+      object-position: center center;
+    }
+
+    .photo.three img {
+      object-position: center center;
+    }
+
+    .photo.four img {
+      object-position: center center;
+    }
+
+    .contact-panel {
+      margin-top: 56px;
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      background:
+        linear-gradient(135deg, rgba(96, 240, 214, 0.16), transparent 46%),
+        rgba(17, 24, 29, 0.82);
+    }
+
+    .contact-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .footer {
+      position: relative;
+      z-index: 1;
+      padding: 28px 0 40px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    [data-lang="en"] {
+      display: none;
+    }
+
+    body.en [data-lang="zh"] {
+      display: none;
+    }
+
+    body.en [data-lang="en"] {
+      display: initial;
+    }
+
+    body.en .tag[data-lang="en"],
+    body.en .button[data-lang="en"],
+    body.en span[data-lang="en"],
+    body.en p[data-lang="en"],
+    body.en h2[data-lang="en"],
+    body.en h3[data-lang="en"],
+    body.en li[data-lang="en"],
+    body.en b[data-lang="en"] {
+      display: inline-flex;
+    }
+
+    body.en p[data-lang="en"],
+    body.en h2[data-lang="en"],
+    body.en h3[data-lang="en"],
+    body.en li[data-lang="en"] {
+      display: block;
+    }
+
+    body.en .detail-list li[data-lang="en"] {
+      display: grid;
+    }
+
+    @keyframes rotate {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes gridMove {
+      from {
+        background-position: 0 0;
+      }
+
+      to {
+        background-position: 40px 40px;
+      }
+    }
+
+    @keyframes typing {
+      from {
+        max-width: 0;
+      }
+
+      to {
+        max-width: 640px;
+      }
+    }
+
+    @keyframes blink {
+      from,
+      to {
+        border-color: transparent;
+      }
+
+      50% {
+        border-color: var(--cyan);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      body::before,
+      .lens::before,
+      .lens::after,
+      .subtitle {
+        animation: none;
+      }
+
+      .section-inner {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      .cursor-glow,
+      .scroll-progress {
+        display: none;
+      }
+    }
+
+    @media (max-width: 960px) {
+      section {
+        background-attachment: scroll;
+      }
+
+      .nav {
+        align-items: flex-start;
+        padding: 14px 0;
+        flex-direction: column;
+      }
+
+      .hero-grid,
+      .section-head,
+      .about-layout,
+      .project,
+      .hometown-layout,
+      .contact-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 170px;
+      }
+
+      .hero-visual {
+        min-height: 440px;
+      }
+
+      .strengths-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hometown-copy {
+        position: static;
+      }
+
+      .contact-links {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .nav-links a,
+      .lang-toggle {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      section {
+        padding: 82px 0;
+      }
+
+      .hero {
+        padding-top: 190px;
+      }
+
+      .hero-actions .button {
+        width: 100%;
+      }
+
+      .subtitle {
+        white-space: normal;
+        animation: none;
+        border-right: 0;
+      }
+
+      .metrics {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+      }
+
+      .metric {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .metric:last-child {
+        border-bottom: 0;
+      }
+
+      .text-panel,
+      .project-body,
+      .strength,
+      .contact-panel {
+        padding: 24px;
+      }
+
+      .strengths-grid,
+      .photo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-list li {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+  <header class="topbar">
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="brand" href="#home" aria-label="Back to home">
+        <span class="brand-mark">SZ</span>
+        <span data-lang="zh">索志 · AI训练师</span>
+        <span data-lang="en">Suozhi · AI Trainer</span>
+      </a>
+      <div class="nav-links">
+        <a href="#about" data-lang="zh">个人简介</a>
+        <a href="#projects" data-lang="zh">项目经历</a>
+        <a href="#strengths" data-lang="zh">工作优势</a>
+        <a href="#hometown" data-lang="zh">我的家乡</a>
+        <a href="#contact" data-lang="zh">联系我</a>
+        <a href="#about" data-lang="en">About</a>
+        <a href="#projects" data-lang="en">Projects</a>
+        <a href="#strengths" data-lang="en">Strengths</a>
+        <a href="#hometown" data-lang="en">Hometown</a>
+        <a href="#contact" data-lang="en">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="section-inner hero-grid">
+        <div>
+          <div class="eyebrow">
+            <span data-lang="zh">首页索志</span>
+            <span data-lang="en">Portfolio of Suozhi</span>
+          </div>
+          <h1>索志</h1>
+          <p class="subtitle">
+            <span data-lang="zh">摄影的眼光，AI训练师的精度</span>
+            <span data-lang="en">A photographer's eye, an AI trainer's precision.</span>
+          </p>
+          <p class="intro">
+            <span data-lang="zh">我专注广告营销方向的多模态数据训练、规则文档撰写、质检管理与模型输出评估，擅长把审美判断转化为可执行、可复现的标注标准。</span>
+            <span data-lang="en">I focus on multimodal data training, guideline writing, quality control, and model output evaluation for advertising and marketing scenarios, turning visual judgment into executable and reproducible labeling standards.</span>
+          </p>
+          <div class="tag-cloud" aria-label="Keywords">
+            <span class="tag" data-lang="zh">数据标注</span>
+            <span class="tag" data-lang="zh">规则文档撰写</span>
+            <span class="tag" data-lang="zh">质检管理</span>
+            <span class="tag" data-lang="zh">Prompt 工程</span>
+            <span class="tag" data-lang="zh">多模态数据处理</span>
+            <span class="tag" data-lang="zh">SFT 数据构建</span>
+            <span class="tag" data-lang="zh">Badcase 分析</span>
+            <span class="tag" data-lang="en">Data Annotation</span>
+            <span class="tag" data-lang="en">Guideline Writing</span>
+            <span class="tag" data-lang="en">QC Management</span>
+            <span class="tag" data-lang="en">Prompt Engineering</span>
+            <span class="tag" data-lang="en">Multimodal Data</span>
+            <span class="tag" data-lang="en">SFT Data</span>
+            <span class="tag" data-lang="en">Badcase Analysis</span>
+          </div>
+          <div class="hero-actions">
+            <a class="button primary" href="#about" data-lang="zh">个人简介</a>
+            <a class="button" href="#projects" data-lang="zh">项目经历</a>
+            <a class="button" href="#strengths" data-lang="zh">工作优势</a>
+            <a class="button" href="#hometown" data-lang="zh">我的家乡</a>
+            <a class="button" href="#contact" data-lang="zh">联系我</a>
+            <a class="button primary" href="#about" data-lang="en">About</a>
+            <a class="button" href="#projects" data-lang="en">Projects</a>
+            <a class="button" href="#strengths" data-lang="en">Strengths</a>
+            <a class="button" href="#hometown" data-lang="en">Hometown</a>
+            <a class="button" href="#contact" data-lang="en">Contact</a>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="Abstract AI training and photography visual">
+          <div class="lens">
+            <div class="focus-card">
+              <strong>95%+</strong>
+              <span data-lang="zh">长期稳定交付准确率，覆盖文生图、文生视频与文本问答项目。</span>
+              <span data-lang="en">Long-term delivery accuracy across text-to-image, text-to-video, and Q&A projects.</span>
+            </div>
+          </div>
+          <div class="metrics">
+            <div class="metric">
+              <b>80+</b>
+              <span data-lang="zh">培训与管理标注成员</span>
+              <span data-lang="en">Trained team members</span>
+            </div>
+            <div class="metric">
+              <b>50万+</b>
+              <span data-lang="zh">处理数据量</span>
+              <span data-lang="en">Data items processed</span>
+            </div>
+            <div class="metric">
+              <b>1年+</b>
+              <span data-lang="zh">AI训练师经验</span>
+              <span data-lang="en">AI training experience</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <div class="kicker">01 / About</div>
+            <h2 data-lang="zh">个人简介</h2>
+            <h2 data-lang="en">About Me</h2>
+          </div>
+          <p data-lang="zh">来自黑龙江大庆，毕业于燕京理工学院。摄影专业背景让我对视觉内容更敏感，AI训练师经验让我能把判断沉淀为规则、流程和交付标准。</p>
+          <p data-lang="en">Born in Daqing, Heilongjiang and graduated from Yanching Institute of Technology. My photography background gives me visual sensitivity, while my AI training experience helps me turn judgment into rules, processes, and delivery standards.</p>
+        </div>
+        <div class="about-layout">
+          <div class="profile-panel">
+            <div class="profile-caption">
+              <span data-lang="zh">AI Trainer / Visual Data Specialist</span>
+              <span data-lang="en">AI Trainer / Visual Data Specialist</span>
+              <span>DAQING</span>
+            </div>
+            <div class="portrait">
+              <img src="assets/profile.png" alt="索志个人照片" />
+            </div>
+          </div>
+          <div class="text-panel">
+            <p data-lang="zh">我叫索志，来自黑龙江大庆，本科学历，毕业于燕京理工学院。我拥有一年多的 AI 训练师工作经验，深耕广告营销方向的多模态文生图、文生视频，以及文本类单轮、多轮问答项目。</p>
+            <p data-lang="zh">工作期间，我管理和培训的标注团队累计超过 80 人，成功处理各类数据超过 50 万条，项目最终交付准确率长期稳定在 95% 以上。我负责的项目流程覆盖需求承接分析、规则文档撰写、正式标注流程、质检验收、最终交付与项目复盘，形成了完整的闭环管理体系。</p>
+            <p data-lang="zh">在项目经历中，我逐步形成了一套解决复杂问题的方法：建立 badcase 案例库规避问题反复，动态调整团队分工提升协作效率，持续优化项目 SOP 增强执行稳定性。同时，我熟练使用主流 AI 模型与工具，曾利用 Cursor、Coze 制作 Agent 和工作流，并分享给同事提升团队效率。工作之余，我会对前沿模型进行竞品分析和评测，并在自媒体平台分享 AI 应用内容。</p>
+            <p data-lang="en">My name is Suozhi. I come from Daqing, Heilongjiang, and hold a bachelor's degree from Yanching Institute of Technology. I have more than one year of experience as an AI trainer, focusing on advertising and marketing scenarios, including multimodal text-to-image, text-to-video, and single-turn or multi-turn text Q&A projects.</p>
+            <p data-lang="en">During this period, I managed and trained annotation teams of over 80 people, processed more than 500,000 data items, and maintained final delivery accuracy above 95%. My project workflow covers requirement analysis, guideline writing, annotation execution, QC acceptance, final delivery, and post-project review.</p>
+            <p data-lang="en">I build badcase libraries to prevent repeated issues, adjust team assignments dynamically to improve collaboration, and continuously optimize SOPs for stable execution. I also use mainstream AI tools such as Cursor and Coze to build agents and workflows, share them with colleagues, and regularly evaluate frontier models and AI applications.</p>
+            <div class="flow-list">
+              <span><i></i><span data-lang="zh">需求分析 → 规则文档 → 标注流程 → 质检验收 → 交付复盘</span><span data-lang="en">Requirement analysis → guidelines → annotation → QC → delivery review</span></span>
+              <span><i></i><span data-lang="zh">Badcase 案例库、团队分工、SOP 优化三线并行</span><span data-lang="en">Badcase library, team allocation, and SOP optimization in parallel</span></span>
+              <span><i></i><span data-lang="zh">将摄影审美转化为模型训练所需的人类反馈数据</span><span data-lang="en">Translating photographic judgment into human feedback data for model training</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <div class="kicker">02 / Projects</div>
+            <h2 data-lang="zh">项目经历</h2>
+            <h2 data-lang="en">Project Experience</h2>
+          </div>
+          <p data-lang="zh">两个代表性项目分别体现我在摄影垂类数据判断、规则沉淀、团队质检，以及文生视频产品横向评测中的执行能力。</p>
+          <p data-lang="en">These two projects demonstrate my execution in photography-specific data judgment, guideline building, team QC, and horizontal evaluation of text-to-video products.</p>
+        </div>
+        <div class="projects">
+          <article class="project">
+            <div class="project-body">
+              <span class="project-index">Project 01</span>
+              <h3 data-lang="zh">不同风格海报图片分类项目执行</h3>
+              <h3 data-lang="en">Poster Image Classification Across Visual Styles</h3>
+              <p data-lang="zh">基于摄影专业背景，我建立了「曝光、构图、色彩」三维评估框架，对模型生成的图片描述逐条核查，重点检查参数描述错误、风格判断偏差和建议可执行性三类问题。</p>
+              <p data-lang="en">Based on my photography background, I built a three-dimensional evaluation framework covering exposure, composition, and color, checking generated image descriptions for parameter errors, style judgment bias, and actionable suggestions.</p>
+              <ul class="detail-list">
+                <li data-lang="zh"><b>质检方式</b> 制定独立判断流程，每日抽检 3 名标注员产出的 20% 数据。</li>
+                <li data-lang="zh"><b>规则沉淀</b> 编写《常见摄影风格识别手册》，覆盖日系、胶片风、低调、赛博朋克等 8 种高频风格。</li>
+                <li data-lang="zh"><b>项目成果</b> 分发全组后，项目准确率从 88.1% 提升至 98.3%。</li>
+                <li data-lang="en"><b>质检方式</b> 制定独立判断流程，每日抽检 3 名标注员产出的 20% 数据。</li>
+                <li data-lang="en"><b>规则沉淀</b> 编写《常见摄影风格识别手册》，覆盖日系、胶片风、低调、赛博朋克等 8 种高频风格。</li>
+                <li data-lang="en"><b>项目成果</b> 分发全组后，项目准确率从 88.1% 提升至 98.3%。</li>
+              </ul>
+            </div>
+          </article>
+          <article class="project">
+            <div class="project-body">
+              <span class="project-index">Project 02</span>
+              <h3 data-lang="zh">文生视频产品横向评测</h3>
+              <h3 data-lang="en">Text-to-Video Product Benchmarking</h3>
+              <p data-lang="zh">围绕当前具有代表性的文生视频产品展开，选取即梦、可灵、Gemini、快乐马四个产品作为评测对象，通过统一题词、统一场景、统一评分标准进行横向对比。</p>
+              <p data-lang="en">This evaluation selected Jimeng, Kling, Gemini, and Kuailema as representative text-to-video products, using unified prompts, scenarios, and scoring standards for comparison.</p>
+              <ul class="detail-list">
+                <li data-lang="zh"><b>评测方法</b> 统一题词、场景与评分维度，降低变量干扰。</li>
+                <li data-lang="zh"><b>评测价值</b> 为产品选型、能力判断、评测集构建和产品优化提供参考。</li>
+                <li data-lang="zh"><b>关注维度</b> 画面一致性、运动合理性、提示词遵循、镜头语言与商业可用性。</li>
+                <li data-lang="en"><b>评测方法</b> 统一题词、场景与评分维度，降低变量干扰。</li>
+                <li data-lang="en"><b>评测价值</b> 为产品选型、能力判断、评测集构建和产品优化提供参考。</li>
+                <li data-lang="en"><b>关注维度</b> 画面一致性、运动合理性、提示词遵循、镜头语言与商业可用性。</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="strengths">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <div class="kicker">03 / Strengths</div>
+            <h2 data-lang="zh">工作优势</h2>
+            <h2 data-lang="en">Work Strengths</h2>
+          </div>
+          <p data-lang="zh">我的优势来自摄影专业与 AI 训练实操的双重积累：既能识别视觉内容中的系统性偏差，也能把审美经验拆解成团队可执行的标准。</p>
+          <p data-lang="en">My strengths come from both photography training and practical AI training experience: I can identify systematic visual bias and convert aesthetic judgment into team-executable standards.</p>
+        </div>
+        <div class="strengths-grid">
+          <article class="strength">
+            <span class="strength-number">01</span>
+            <h3 data-lang="zh">视觉专业判断</h3>
+            <h3 data-lang="en">Visual Expertise</h3>
+            <p data-lang="zh">摄影专业本科背景让我能在垂类摄影数据项目中提供超越普通标注员的判断力，尤其擅长识别曝光、色彩、构图和风格判断中的偏差。</p>
+            <p data-lang="en">My photography background allows me to provide stronger judgment in photography-specific data projects, especially around exposure, color, composition, and style bias.</p>
+          </article>
+          <article class="strength">
+            <span class="strength-number">02</span>
+            <h3 data-lang="zh">数据类型理解</h3>
+            <h3 data-lang="en">Data Type Fluency</h3>
+            <p data-lang="zh">熟悉 SFT、Reward、多模态等主流数据类型，能够从海量数据中发现规律，并主动推动规则优化与质检策略迭代。</p>
+            <p data-lang="en">I am familiar with mainstream data types such as SFT, Reward, and multimodal data, and can identify patterns from large datasets to improve guidelines and QC strategies.</p>
+          </article>
+          <article class="strength">
+            <span class="strength-number">03</span>
+            <h3 data-lang="zh">规则转化能力</h3>
+            <h3 data-lang="en">Rule Translation</h3>
+            <p data-lang="zh">能将隐性的审美判断转化为可量化、可描述、可复现的标注标准，为模型训练提供高可信度的人类反馈数据。</p>
+            <p data-lang="en">I turn implicit aesthetic judgment into measurable, describable, and reproducible annotation standards, providing reliable human feedback data for model training.</p>
+          </article>
+          <article class="strength">
+            <span class="strength-number">04</span>
+            <h3 data-lang="zh">交付闭环意识</h3>
+            <h3 data-lang="en">Delivery Mindset</h3>
+            <p data-lang="zh">从需求分析到复盘沉淀，我习惯用闭环方式推进项目，关注准确率、协作效率和长期执行稳定性。</p>
+            <p data-lang="en">From requirement analysis to project review, I work with a closed-loop mindset and care about accuracy, collaboration efficiency, and long-term execution stability.</p>
+          </article>
+          <article class="strength">
+            <span class="strength-number">05</span>
+            <h3 data-lang="zh">主动优化意识</h3>
+            <h3 data-lang="en">Proactive Optimization</h3>
+            <p data-lang="zh">两次规则建议均被项目方全部采纳，说明我不仅能执行规则，也能在真实项目中识别问题并推动规则升级。</p>
+            <p data-lang="en">Two of my rule suggestions were fully adopted by project stakeholders, showing that I can not only execute guidelines but also identify issues and upgrade them.</p>
+          </article>
+          <article class="strength">
+            <span class="strength-number">06</span>
+            <h3 data-lang="zh">AI 工具应用</h3>
+            <h3 data-lang="en">AI Tooling</h3>
+            <p data-lang="zh">熟练使用主流 AI 模型和工具，能够通过 Agent、工作流和模型评测提升个人与团队的工作效率。</p>
+            <p data-lang="en">I use mainstream AI models and tools, building agents, workflows, and model evaluations to improve both personal and team efficiency.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="hometown">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <div class="kicker">04 / Hometown</div>
+            <h2 data-lang="zh">我的家乡</h2>
+            <h2 data-lang="en">My Hometown</h2>
+          </div>
+          <p data-lang="zh">大庆，中国最大的石油工业基地，以“铁人精神”闻名于世，黑土地上涌动着工业报国的豪情。</p>
+          <p data-lang="en">Daqing is China's largest petroleum industrial base, known for the Iron Man Spirit and the ambition of building industry on the black soil of Northeast China.</p>
+        </div>
+        <div class="hometown-layout">
+          <div class="hometown-copy">
+            <p data-lang="zh">我的家乡大庆，有辽阔的黑土地、清晰的工业记忆，也有一种朴素而坚定的精神气质。它影响了我对工作的理解：做事要扎实，判断要有依据，结果要能经得起检验。</p>
+            <p data-lang="en">My hometown Daqing has vast black soil, vivid industrial memory, and a grounded yet determined spirit. It shaped how I understand work: be solid, make evidence-based judgments, and deliver results that can stand review.</p>
+          </div>
+          <div class="photo-grid" aria-label="Four hometown images">
+            <div class="photo one" data-title="铁人精神 / Iron Man Spirit">
+              <img src="assets/hometown-01.jpg" alt="大庆铁人纪念馆与雕像" />
+            </div>
+            <div class="photo two" data-title="城市街景 / City Street">
+              <img src="assets/hometown-02.jpg" alt="城市街道与行人" />
+            </div>
+            <div class="photo three" data-title="生活街区 / Neighborhood">
+              <img src="assets/hometown-03.jpg" alt="大庆生活街区建筑与街景" />
+            </div>
+            <div class="photo four" data-title="树影与日常 / Quiet Daily Scene">
+              <img src="assets/hometown-04.jpg" alt="树影、自行车与安静的日常场景" />
+            </div>
+          </div>
+        </div>
+        <div class="contact-panel" id="contact">
+          <div>
+            <div class="kicker">Contact</div>
+            <h3 data-lang="zh">期待与团队或项目一起，把数据质量做得更准、更稳、更可复用。</h3>
+            <h3 data-lang="en">Ready to help teams make data quality more accurate, stable, and reusable.</h3>
+            <p data-lang="zh">邮箱：1036952043@qq.com · 微信：S17745541018</p>
+            <p data-lang="en">Email: 1036952043@qq.com · WeChat: S17745541018</p>
+          </div>
+          <div class="contact-links">
+            <a class="button primary" href="mailto:1036952043@qq.com">Email</a>
+            <a class="button" href="#" aria-label="WeChat S17745541018">WeChat: S17745541018</a>
+            <a class="button" href="#">GitHub</a>
+            <a class="button" href="#">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="section-inner">
+      <span data-lang="zh">© 2026 索志 · AI训练师个人网站</span>
+      <span data-lang="en">© 2026 Suozhi · AI Trainer Portfolio</span>
+    </div>
+  </footer>
+
+  <script>
+    const body = document.body;
+    const toggle = document.querySelector(".lang-toggle");
+    const navLinks = [...document.querySelectorAll(".nav-links a")];
+    const sections = [...document.querySelectorAll("main section")];
+    const glow = document.querySelector(".cursor-glow");
+    const progress = document.querySelector(".scroll-progress span");
+    const counters = [...document.querySelectorAll(".metric b, .focus-card strong")];
+    const canvas = document.getElementById("bgCanvas");
+    const ctx = canvas.getContext("2d");
+    const particles = [];
+    const particleCount = 60;
+    let countersStarted = false;
+
+    function updateProgress() {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const percent = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+      progress.style.width = `${Math.min(100, Math.max(0, percent))}%`;
+    }
+
+    function animateCounters() {
+      if (countersStarted) return;
+      countersStarted = true;
+
+      counters.forEach((counter) => {
+        const finalText = counter.textContent.trim();
+        const match = finalText.match(/^([\d.]+)(.*)$/);
+        if (!match) return;
+
+        const target = Number(match[1]);
+        const suffix = match[2];
+        const isDecimal = finalText.includes(".");
+        const startTime = performance.now();
+        const duration = 1200;
+
+        function tick(now) {
+          const progressValue = Math.min((now - startTime) / duration, 1);
+          const eased = 1 - Math.pow(1 - progressValue, 3);
+          const value = target * eased;
+          counter.textContent = `${isDecimal ? value.toFixed(1) : Math.round(value)}${suffix}`;
+
+          if (progressValue < 1) {
+            requestAnimationFrame(tick);
+          } else {
+            counter.textContent = finalText;
+          }
+        }
+
+        requestAnimationFrame(tick);
+      });
+    }
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth * window.devicePixelRatio;
+      canvas.height = window.innerHeight * window.devicePixelRatio;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+      ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+    }
+
+    function seedParticles() {
+      particles.length = 0;
+      for (let i = 0; i < particleCount; i += 1) {
+        particles.push({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          vx: (Math.random() - 0.5) * 0.32,
+          vy: (Math.random() - 0.5) * 0.32,
+          r: Math.random() * 1.8 + 0.8
+        });
+      }
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      particles.forEach((particle, index) => {
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+
+        if (particle.x < 0 || particle.x > window.innerWidth) particle.vx *= -1;
+        if (particle.y < 0 || particle.y > window.innerHeight) particle.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(96, 240, 214, 0.5)";
+        ctx.fill();
+
+        for (let next = index + 1; next < particles.length; next += 1) {
+          const other = particles[next];
+          const dx = particle.x - other.x;
+          const dy = particle.y - other.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 150) {
+            ctx.beginPath();
+            ctx.moveTo(particle.x, particle.y);
+            ctx.lineTo(other.x, other.y);
+            ctx.strokeStyle = `rgba(96, 240, 214, ${0.12 * (1 - distance / 150)})`;
+            ctx.stroke();
+          }
+        }
+      });
+
+      requestAnimationFrame(drawParticles);
+    }
+
+    if (toggle) {
+      toggle.addEventListener("click", () => {
+        body.classList.toggle("en");
+        const isEnglish = body.classList.contains("en");
+        toggle.textContent = isEnglish ? "中" : "EN";
+        document.documentElement.lang = isEnglish ? "en" : "zh-CN";
+      });
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        if (entry.target.id === "home") animateCounters();
+        navLinks.forEach((link) => {
+          link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`);
+        });
+      });
+    }, { rootMargin: "-32% 0px -42% 0px", threshold: 0 });
+
+    sections.forEach((section) => observer.observe(section));
+
+    resizeCanvas();
+    seedParticles();
+    drawParticles();
+    updateProgress();
+
+    window.addEventListener("resize", () => {
+      resizeCanvas();
+      seedParticles();
+      updateProgress();
+    });
+
+    window.addEventListener("scroll", updateProgress, { passive: true });
+
+    window.addEventListener("pointermove", (event) => {
+      glow.style.opacity = "1";
+      glow.style.transform = `translate(${event.clientX - 180}px, ${event.clientY - 180}px)`;
+    });
+
+    window.addEventListener("pointerleave", () => {
+      glow.style.opacity = "0";
+    });
+  </script>
+</body>
+</html>
