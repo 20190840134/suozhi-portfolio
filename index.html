@@ -921,8 +921,8 @@ footer{background:#0f1420;color:rgba(139,164,249,.45);padding:2rem 3.5rem;
 .dw-filter-btn{font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;padding:.45rem 1.1rem;border-radius:2rem;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.5);background:transparent;cursor:pointer;transition:all .25s;}
 .dw-filter-btn:hover{border-color:rgba(139,164,249,.5);color:#8ba4f9;}
 .dw-filter-btn.active{background:#8ba4f9;border-color:#8ba4f9;color:#02040a;font-weight:700;}
-.dw-grid{width:min(100% - 8rem,1380px);margin:0 auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1.15rem;align-items:start;}
-@media(max-width:1100px){.dw-grid{grid-template-columns:repeat(3,1fr);width:min(100% - 3rem,920px);}.dw-header{width:min(100% - 3rem,920px);}}
+.dw-grid{width:min(100% - 8rem,1600px);margin:0 auto;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.9rem;align-items:start;}
+@media(max-width:1100px){.dw-grid{grid-template-columns:repeat(4,1fr);width:min(100% - 3rem,920px);}.dw-header{width:min(100% - 3rem,920px);}}
 @media(max-width:700px){.dw-grid{grid-template-columns:repeat(2,1fr);gap:.8rem;width:calc(100% - 2rem);}.dw-header{width:calc(100% - 2rem);display:block;}.dw-sub{text-align:left;margin-top:1rem;}}
 .dw-card{position:relative;overflow:hidden;border-radius:3px;cursor:pointer;background:#0a0c14;aspect-ratio:2/3;transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .4s;z-index:1;}
 .dw-card:hover{transform:translateY(-6px);z-index:10;box-shadow:0 16px 40px rgba(0,0,0,.6);}
@@ -1004,10 +1004,10 @@ footer{background:#0f1420;color:rgba(139,164,249,.45);padding:2rem 3.5rem;
 <section id="design-works">
   <div class="dw-header">
     <div>
-      <span class="dw-eyebrow">摄影视觉</span>
-      <div class="dw-title">Photography Works</div>
+      <span class="dw-eyebrow">视觉设计</span>
+      <div class="dw-title">Design Works</div>
     </div>
-    <div class="dw-sub">摄影 · 影视创作<br>用镜头理解画面，也用数据校准模型审美</div>
+    <div class="dw-sub">海报 · 视觉传达<br>在图形语言里寻找秩序与张力</div>
   </div>
   <div class="dw-grid" id="dw-grid"></div>
 </section>
@@ -2246,11 +2246,13 @@ const galleryItems = [
 /* DESIGN WORKS */
 (function(){
 const designItems=[
-  {title:"再见青春",desc:"毕业季海报",cat:"海报",src:"assets/gallery/mountain.jpg"},
-  {title:"江山如画·烟",desc:"水墨字体海报",cat:"海报",src:"assets/gallery/night-city.jpg"},
-  {title:"珍惜时光",desc:"新中式创意海报",cat:"海报",src:"assets/gallery/street-light.jpg"},
-  {title:"江山如画",desc:"新中式水墨海报",cat:"海报",src:"assets/gallery/street-gate.jpg"},
-  {title:"诗和远方",desc:"文艺风海报",cat:"海报",src:"assets/gallery/framed-building.jpg"}
+  {title:"再见青春",desc:"毕业季海报",cat:"海报",src:"assets/design/design-01.jpg"},
+  {title:"江山如画·烟",desc:"水墨字体海报",cat:"海报",src:"assets/design/design-02.jpg"},
+  {title:"珍惜时光",desc:"新中式创意海报",cat:"海报",src:"assets/design/design-03.jpg"},
+  {title:"江山如画",desc:"新中式水墨海报",cat:"海报",src:"assets/design/design-04.jpg"},
+  {title:"诗和远方",desc:"文艺风海报",cat:"海报",src:"assets/design/design-05.jpg"},
+  {title:"把家种在森林里",desc:"环保主题海报",cat:"海报",src:"assets/design/design-06.jpg"},
+  {title:"没有买卖就没有杀害",desc:"公益海报",cat:"海报",src:"assets/design/design-07.jpg"}
 ];
   var grid = document.getElementById('dw-grid');
 
