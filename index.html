@@ -909,32 +909,33 @@ footer{background:#0f1420;color:rgba(139,164,249,.45);padding:2rem 3.5rem;
 .pp-cert-wrap img{width:100%;display:block;}
 
 /* ═══════════════════════════════════
-   DESIGN WORKS SECTION
+   AI PORTFOLIO SECTION
 ═══════════════════════════════════ */
-#design-works{background:#02040a;padding:7rem 0 8rem;position:relative;}
-#design-works::before{content:'';position:absolute;top:0;left:4rem;right:4rem;height:1px;background:rgba(255,255,255,.06);}
-.dw-header{width:min(100% - 8rem,1380px);margin:0 auto 3.5rem;display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;}
-.dw-eyebrow{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#8ba4f9;margin-bottom:.8rem;display:block;}
-.dw-title{font-family:var(--serif);font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#fff;line-height:1;letter-spacing:-.02em;}
-.dw-sub{font-size:.78rem;color:rgba(255,255,255,.4);max-width:260px;text-align:right;line-height:1.7;}
-.dw-filter{padding:0 4rem 2.5rem;display:flex;gap:.7rem;}
-.dw-filter-btn{font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;padding:.45rem 1.1rem;border-radius:2rem;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.5);background:transparent;cursor:pointer;transition:all .25s;}
-.dw-filter-btn:hover{border-color:rgba(139,164,249,.5);color:#8ba4f9;}
-.dw-filter-btn.active{background:#8ba4f9;border-color:#8ba4f9;color:#02040a;font-weight:700;}
-.dw-grid{width:min(100% - 8rem,1600px);margin:0 auto;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.9rem;align-items:start;}
-@media(max-width:1100px){.dw-grid{grid-template-columns:repeat(4,1fr);width:min(100% - 3rem,920px);}.dw-header{width:min(100% - 3rem,920px);}}
-@media(max-width:700px){.dw-grid{grid-template-columns:repeat(2,1fr);gap:.8rem;width:calc(100% - 2rem);}.dw-header{width:calc(100% - 2rem);display:block;}.dw-sub{text-align:left;margin-top:1rem;}}
-.dw-card{position:relative;overflow:hidden;border-radius:3px;cursor:pointer;background:#0a0c14;aspect-ratio:2/3;transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .4s;z-index:1;}
-.dw-card:hover{transform:translateY(-6px);z-index:10;box-shadow:0 16px 40px rgba(0,0,0,.6);}
-.dw-card img{width:100%;height:100%;object-fit:cover;display:block;transition:filter .4s;}
-.dw-card:hover img{filter:brightness(1.05);}
-.dw-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(2,4,10,.92) 0%,rgba(2,4,10,.3) 50%,transparent 100%);opacity:0;transition:opacity .35s;display:flex;align-items:flex-end;padding:.7rem;}
-.dw-card:hover .dw-card-overlay{opacity:1;}
-.dw-card-info{transform:translateY(6px);transition:transform .4s cubic-bezier(.16,1,.3,1);}
-.dw-card:hover .dw-card-info{transform:none;}
-.dw-card-cat{font-size:.4rem;letter-spacing:.14em;text-transform:uppercase;color:#8ba4f9;display:block;margin-bottom:.2rem;}
-.dw-card-name{font-family:var(--serif);font-size:.72rem;font-weight:900;color:#fff;line-height:1.2;display:block;}
-.dw-card-desc{display:none;}
+#design-works.ai-portfolio{background:#121211;padding:7rem 1.8rem 7.5rem;position:relative;overflow:hidden;color:#f6f0dd;}
+#design-works.ai-portfolio::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 8% 28%,rgba(182,206,92,.13),transparent 24rem),radial-gradient(circle at 94% 92%,rgba(40,152,105,.16),transparent 22rem),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px);background-size:auto,auto,42px 42px,42px 42px;opacity:.72;pointer-events:none;}
+.ai-portfolio-title{width:min(100%,1500px);margin:0 auto 4.2rem;position:relative;z-index:1;}
+.ai-portfolio-title p{font-size:.68rem;letter-spacing:.28em;color:#7af0bf;text-transform:uppercase;margin:0 0 1.2rem;font-weight:800;}
+.ai-portfolio-title h2{max-width:780px;font-family:var(--serif);font-size:clamp(3.3rem,6vw,6.8rem);line-height:1.05;font-weight:900;letter-spacing:0;margin:0;color:#f6f0dd;}
+.ai-portfolio-showcase{width:min(100%,1500px);margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(320px,.75fr);gap:1.6rem;padding:1.45rem;border:1px solid rgba(246,240,221,.14);border-radius:34px;background:rgba(255,255,255,.045);box-shadow:0 30px 90px rgba(0,0,0,.38),inset 0 0 0 1px rgba(255,255,255,.035);backdrop-filter:blur(14px);}
+.ai-portfolio-main,.ai-portfolio-card{border:1px solid rgba(246,240,221,.13);background:rgba(255,255,255,.055);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);border-radius:24px;}
+.ai-portfolio-main{min-height:460px;padding:3.1rem;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;position:relative;overflow:hidden;}
+.ai-portfolio-main::after{content:'';position:absolute;inset:auto -8rem -12rem auto;width:28rem;height:28rem;background:radial-gradient(circle,rgba(122,240,191,.14),transparent 64%);pointer-events:none;}
+.ai-portfolio-main span{font-size:.72rem;letter-spacing:.32em;color:#7af0bf;font-weight:900;text-transform:uppercase;margin-bottom:1.2rem;}
+.ai-portfolio-main h3{font-size:clamp(3.8rem,6vw,6.6rem);line-height:.95;font-weight:900;margin:0 0 1.6rem;color:#fff7df;}
+.ai-portfolio-main p{max-width:780px;font-size:1.02rem;line-height:2;color:rgba(246,240,221,.72);margin:0 0 2.4rem;}
+.ai-portfolio-preview-strip{display:flex;gap:1rem;margin:0 0 2.4rem;}
+.ai-portfolio-preview-strip img{width:145px;height:160px;object-fit:cover;border-radius:16px;border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 30px rgba(0,0,0,.26);}
+.ai-portfolio-main a,.ai-portfolio-card a{display:inline-flex;align-items:center;gap:.65rem;color:#ffe08a;text-decoration:none;font-weight:900;letter-spacing:.02em;}
+.ai-portfolio-main a{padding:.85rem 1.4rem;border:1px solid rgba(255,224,138,.35);border-radius:999px;background:rgba(255,224,138,.06);}
+.ai-portfolio-main a::after,.ai-portfolio-card a::after{content:'—';}
+.ai-portfolio-stack{display:grid;gap:1.05rem;}
+.ai-portfolio-card{min-height:150px;padding:1.7rem 1.8rem;display:flex;flex-direction:column;justify-content:center;transition:transform .3s,background .3s,border-color .3s;}
+.ai-portfolio-card:hover{transform:translateY(-4px);background:rgba(122,240,191,.08);border-color:rgba(122,240,191,.3);}
+.ai-portfolio-card b{font-family:var(--mono);font-size:.82rem;color:#ff8d49;letter-spacing:.16em;margin-bottom:1rem;}
+.ai-portfolio-card strong{font-size:1.45rem;color:#fff7df;margin-bottom:.65rem;}
+.ai-portfolio-card small{font-size:.86rem;line-height:1.75;color:rgba(246,240,221,.58);margin-bottom:1rem;}
+@media(max-width:980px){#design-works.ai-portfolio{padding:5.5rem 1rem}.ai-portfolio-showcase{grid-template-columns:1fr;border-radius:24px;padding:1rem}.ai-portfolio-main{min-height:0;padding:2.2rem}.ai-portfolio-title{margin-bottom:2rem}.ai-portfolio-title h2{font-size:clamp(2.5rem,10vw,4.8rem)}}
+@media(max-width:620px){.ai-portfolio-preview-strip{gap:.7rem}.ai-portfolio-preview-strip img{width:31%;height:118px;border-radius:12px}.ai-portfolio-main h3{font-size:3.4rem}.ai-portfolio-main p{font-size:.92rem;line-height:1.8}.ai-portfolio-card{padding:1.4rem;min-height:132px}.ai-portfolio-card strong{font-size:1.2rem;}}
 
 </style>
 </head>
@@ -1000,16 +1001,45 @@ footer{background:#0f1420;color:rgba(139,164,249,.45);padding:2rem 3.5rem;
 <div class="mq-wrap"><div class="mq-track" id="mq1"></div></div>
 
 <!-- WORK -->
-<!-- DESIGN WORKS -->
-<section id="design-works">
-  <div class="dw-header">
-    <div>
-      <span class="dw-eyebrow">视觉设计</span>
-      <div class="dw-title">Design Works</div>
-    </div>
-    <div class="dw-sub">海报 · 视觉传达<br>在图形语言里寻找秩序与张力</div>
+<!-- AI PORTFOLIO -->
+<section id="design-works" class="ai-portfolio">
+  <div class="ai-portfolio-title">
+    <p>PORTFOLIO</p>
+    <h2>作品集将作为 AI 生成影像展厅。</h2>
   </div>
-  <div class="dw-grid" id="dw-grid"></div>
+  <div class="ai-portfolio-showcase">
+    <article class="ai-portfolio-main">
+      <span>AI IMAGE PORTFOLIO</span>
+      <h3>作品集</h3>
+      <p>这里已经接入 AI 图像生成 Prompt 作品集，包含 24 个视觉案例，可以查看图片、分类和完整 Prompt 拆解。</p>
+      <div class="ai-portfolio-preview-strip" aria-hidden="true">
+        <img src="assets/portfolio-previews/case-01.webp" alt="" loading="lazy" decoding="async">
+        <img src="assets/portfolio-previews/case-07.webp" alt="" loading="lazy" decoding="async">
+        <img src="assets/portfolio-previews/case-13.webp" alt="" loading="lazy" decoding="async">
+      </div>
+      <a href="https://da5a288e.gujiahao-personal-website.pages.dev/portfolio/index.html" target="_blank" rel="noopener">进入作品集</a>
+    </article>
+    <div class="ai-portfolio-stack">
+      <article class="ai-portfolio-card">
+        <b>01</b>
+        <strong>视觉案例库</strong>
+        <small>24 个 AI 图像案例，覆盖角色、场景、产品、时尚和自然景观。</small>
+        <a href="https://da5a288e.gujiahao-personal-website.pages.dev/portfolio/index.html" target="_blank" rel="noopener">查看案例</a>
+      </article>
+      <article class="ai-portfolio-card">
+        <b>02</b>
+        <strong>Prompt 拆解</strong>
+        <small>展示角色设定、场景环境、构图光线和负面提示词的完整结构。</small>
+        <a href="https://da5a288e.gujiahao-personal-website.pages.dev/portfolio/index.html" target="_blank" rel="noopener">查看 Prompt</a>
+      </article>
+      <article class="ai-portfolio-card">
+        <b>03</b>
+        <strong>生成控制力</strong>
+        <small>体现风格、情绪、材质、光影与画面质感的控制能力。</small>
+        <a href="https://da5a288e.gujiahao-personal-website.pages.dev/portfolio/index.html" target="_blank" rel="noopener">进入展厅</a>
+      </article>
+    </div>
+  </div>
 </section>
 
 <!-- GALLERY -->
@@ -2244,75 +2274,7 @@ const galleryItems = [
 
 
 /* DESIGN WORKS */
-(function(){
-const designItems=[
-  {title:"再见青春",desc:"毕业季海报",cat:"海报",src:"assets/design/design-01.jpg"},
-  {title:"江山如画·烟",desc:"水墨字体海报",cat:"海报",src:"assets/design/design-02.jpg"},
-  {title:"珍惜时光",desc:"新中式创意海报",cat:"海报",src:"assets/design/design-03.jpg"},
-  {title:"江山如画",desc:"新中式水墨海报",cat:"海报",src:"assets/design/design-04.jpg"},
-  {title:"诗和远方",desc:"文艺风海报",cat:"海报",src:"assets/design/design-05.jpg"},
-  {title:"把家种在森林里",desc:"环保主题海报",cat:"海报",src:"assets/design/design-06.jpg"},
-  {title:"没有买卖就没有杀害",desc:"公益海报",cat:"海报",src:"assets/design/design-07.jpg"}
-];
-  var grid = document.getElementById('dw-grid');
-
-  // Build cards
-  designItems.forEach(function(item, i){
-    var card = document.createElement('div');
-    card.className = 'dw-card';
-    card.dataset.cat = item.cat;
-    var img = document.createElement('img');
-    img.src = item.src; img.alt = item.title; img.loading = 'lazy';
-    var ov = document.createElement('div');
-    ov.className = 'dw-card-overlay';
-    ov.innerHTML = '<div class="dw-card-info">'
-      + '<span class="dw-card-cat">' + item.cat + '</span>'
-      + '<span class="dw-card-name">' + item.title + '</span>'
-      + '<span class="dw-card-desc">' + item.desc + '</span>'
-      + '</div>';
-    card.appendChild(img); card.appendChild(ov);
-    card.addEventListener('click', function(){ openDwLb(i); });
-    grid.appendChild(card);
-  });
-
-  // Filter
-  document.querySelectorAll('.dw-filter-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      document.querySelectorAll('.dw-filter-btn').forEach(function(b){ b.classList.remove('active'); });
-      btn.classList.add('active');
-      var f = btn.dataset.filter;
-      document.querySelectorAll('.dw-card').forEach(function(card){
-        card.dataset.hidden = (f !== '全部' && card.dataset.cat !== f) ? 'true' : 'false';
-      });
-    });
-  });
-
-  // Lightbox (reuse gallery lightbox)
-  var lb = document.getElementById('gallery-lightbox');
-  var lbImg = document.getElementById('lb-img');
-  var lbTitle = document.getElementById('lb-title');
-  var lbMeta = document.getElementById('lb-meta');
-  var dwCur = 0;
-  var dwActive = [];
-
-  function openDwLb(i){
-    dwActive = designItems;
-    dwCur = i;
-    showDwLb();
-    lb.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    // Override nav buttons temporarily
-    document.getElementById('lb-prev').onclick = function(){ dwCur=(dwCur-1+dwActive.length)%dwActive.length; showDwLb(); };
-    document.getElementById('lb-next').onclick = function(){ dwCur=(dwCur+1)%dwActive.length; showDwLb(); };
-  }
-  function showDwLb(){
-    var item = dwActive[dwCur];
-    lbImg.src = item.src;
-    lbTitle.textContent = item.title;
-    lbMeta.textContent = item.desc;
-  }
-})();
-
+/* Replaced by static AI portfolio module. */
 </script>
 
 <!-- PHOTO REVEAL CARD -->
