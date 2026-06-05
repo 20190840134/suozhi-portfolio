@@ -938,6 +938,27 @@ footer{background:#0f1420;color:rgba(139,164,249,.45);padding:2rem 3.5rem;
 @media(max-width:980px){#design-works.ai-portfolio{padding:5.5rem 1rem}.ai-portfolio-showcase{grid-template-columns:1fr;border-radius:24px;padding:1rem}.ai-portfolio-main{min-height:0;padding:2.2rem}.ai-portfolio-title{margin-bottom:2rem}.ai-portfolio-title h2{font-size:clamp(2.5rem,10vw,4.8rem)}}
 @media(max-width:620px){.ai-portfolio-preview-strip{gap:.7rem}.ai-portfolio-preview-strip img{width:31%;height:118px;border-radius:12px}.ai-portfolio-main h3{font-size:3.4rem}.ai-portfolio-main p{font-size:.92rem;line-height:1.8}.ai-portfolio-card{padding:1.4rem;min-height:132px}.ai-portfolio-card strong{font-size:1.2rem;}}
 
+/* ═══════════════════════════════════
+   FILM WORK SECTION
+═══════════════════════════════════ */
+#film-work{background:#02040a;padding:0 3.8rem 7rem;position:relative;overflow:hidden;color:#fff;}
+.film-wrap{width:min(100%,1420px);margin:0 auto;display:grid;grid-template-columns:minmax(280px,.72fr) minmax(0,1.28fr);gap:2.2rem;align-items:stretch;}
+.film-copy{padding-top:1.2rem;}
+.film-eyebrow{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#8ba4f9;margin-bottom:.9rem;display:block;}
+.film-title{font-family:var(--serif);font-size:clamp(3rem,7vw,7rem);font-weight:900;line-height:.92;color:#fff;margin-bottom:1.3rem;}
+.film-sub{font-size:.92rem;line-height:1.9;color:rgba(255,255,255,.5);max-width:430px;}
+.film-meta{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1.8rem;}
+.film-meta span{font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:.45rem .75rem;background:rgba(255,255,255,.035);}
+.film-stage{position:relative;min-height:430px;border:1px solid rgba(255,255,255,.11);border-radius:28px;background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.025));box-shadow:0 30px 80px rgba(0,0,0,.38),inset 0 0 0 1px rgba(255,255,255,.035);overflow:hidden;}
+.film-stage::before{content:'';position:absolute;inset:1.2rem;border:1px solid rgba(255,255,255,.08);border-radius:22px;background:radial-gradient(circle at 18% 22%,rgba(139,164,249,.16),transparent 22rem),radial-gradient(circle at 82% 82%,rgba(34,85,238,.11),transparent 24rem),linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,0));}
+.film-stage::after{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);}
+.film-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;z-index:1;}
+.film-play{width:78px;height:78px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;box-shadow:0 16px 40px rgba(0,0,0,.32);}
+.film-play::before{content:'';display:block;border-left:18px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:5px;}
+.film-placeholder strong{font-size:1.4rem;color:#fff;margin-bottom:.65rem;}
+.film-placeholder small{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.42);}
+@media(max-width:900px){#film-work{padding:0 1rem 5.5rem}.film-wrap{grid-template-columns:1fr;gap:1.4rem}.film-stage{min-height:300px}.film-title{font-size:clamp(3.2rem,14vw,5.4rem)}}
+
 </style>
 </head>
 <body>
@@ -965,6 +986,7 @@ footer{background:#0f1420;color:rgba(139,164,249,.45);padding:2rem 3.5rem;
   <ul class="nav-links">
     <li><a href="#work">Work</a></li>
     <li><a href="#design-works">Portfolio</a></li>
+    <li><a href="#film-work">Film</a></li>
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#capabilities">Skills</a></li>
     <li><a href="#about">About</a></li>
@@ -1039,6 +1061,29 @@ footer{background:#0f1420;color:rgba(139,164,249,.45);padding:2rem 3.5rem;
         <small>体现风格、情绪、材质、光影与画面质感的控制能力。</small>
         <a href="portfolio/index.html">进入展厅</a>
       </article>
+    </div>
+  </div>
+</section>
+
+<!-- FILM WORK -->
+<section id="film-work">
+  <div class="film-wrap">
+    <div class="film-copy">
+      <span class="film-eyebrow">影像短片</span>
+      <div class="film-title">Film Work</div>
+      <p class="film-sub">《归乡》将作为独立影像短片展示位。以摄影专业训练为基础，通过镜头语言、剪辑节奏与环境声音表达故乡、路途与回望。</p>
+      <div class="film-meta">
+        <span>短片预留位</span>
+        <span>摄影 / 剪辑</span>
+        <span>Coming Soon</span>
+      </div>
+    </div>
+    <div class="film-stage" aria-label="归乡视频预留位置">
+      <div class="film-placeholder">
+        <div class="film-play" aria-hidden="true"></div>
+        <strong>归乡</strong>
+        <small>Video placeholder / waiting for upload</small>
+      </div>
     </div>
   </div>
 </section>
