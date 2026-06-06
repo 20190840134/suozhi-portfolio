@@ -952,6 +952,7 @@ footer{background:#0f1420;color:rgba(139,164,249,.45);padding:2rem 3.5rem;
 .film-stage{position:relative;min-height:430px;border:1px solid rgba(255,255,255,.11);border-radius:28px;background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.025));box-shadow:0 30px 80px rgba(0,0,0,.38),inset 0 0 0 1px rgba(255,255,255,.035);overflow:hidden;}
 .film-stage::before{content:'';position:absolute;inset:1.2rem;border:1px solid rgba(255,255,255,.08);border-radius:22px;background:radial-gradient(circle at 18% 22%,rgba(139,164,249,.16),transparent 22rem),radial-gradient(circle at 82% 82%,rgba(34,85,238,.11),transparent 24rem),linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,0));}
 .film-stage::after{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);}
+.film-video{position:absolute;inset:1.2rem;width:calc(100% - 2.4rem);height:calc(100% - 2.4rem);object-fit:contain;border-radius:22px;background:#000;z-index:2;box-shadow:0 20px 60px rgba(0,0,0,.42);}
 .film-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;z-index:1;}
 .film-play{width:78px;height:78px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;box-shadow:0 16px 40px rgba(0,0,0,.32);}
 .film-play::before{content:'';display:block;border-left:18px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:5px;}
@@ -1078,12 +1079,11 @@ footer{background:#0f1420;color:rgba(139,164,249,.45);padding:2rem 3.5rem;
         <span>Coming Soon</span>
       </div>
     </div>
-    <div class="film-stage" aria-label="归乡视频预留位置">
-      <div class="film-placeholder">
-        <div class="film-play" aria-hidden="true"></div>
-        <strong>归乡</strong>
-        <small>Video placeholder / waiting for upload</small>
-      </div>
+    <div class="film-stage" aria-label="归乡短片播放器">
+      <video class="film-video" controls preload="metadata" poster="assets/videos/guixiang-poster.jpg">
+        <source src="assets/videos/guixiang-web.mp4" type="video/mp4">
+        您的浏览器暂不支持视频播放。
+      </video>
     </div>
   </div>
 </section>
